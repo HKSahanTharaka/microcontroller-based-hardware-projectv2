@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Weight Squats Data</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="temp.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="title font-weight-bold mb-3">Body Weight Squats Data</div>
+        <div class="description mt-4 text-center">Here is your workout data for Body Weight Squats:</div>
+
+        <!-- Mats Section -->
+        <fieldset class="border p-2">
+            <legend class="w-auto text-center">Weight Distribution</legend>
+            <div class="mat-container" role="group" aria-label="Mat Section">
+                <div class="mat" id="leftMat" aria-labelledby="leftMatLabel">
+                    <div class="point" data-point="1">1</div>
+                    <div class="point" data-point="2">2</div>
+                    <div class="point" data-point="3">3</div>
+                    <div class="point" data-point="4">4</div>
+                    <div class="total-weight" id="leftMatTotal" aria-live="polite"></div>
+                    <div class="label" id="leftMatLabel">Left Mat</div>
+                </div>
+                
+                <div class="mat" id="rightMat" aria-labelledby="rightMatLabel">
+                    <div class="point" data-point="5">5</div>
+                    <div class="point" data-point="6">6</div>
+                    <div class="point" data-point="7">7</div>
+                    <div class="point" data-point="8">8</div>
+                    <div class="total-weight" id="rightMatTotal" aria-live="polite"></div>
+                    <div class="label" id="rightMatLabel">Right Mat</div>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Bar Section -->
+        <fieldset class="border p-2 mt-4">
+            <legend class="w-auto text-center">Movement of Gravity Center</legend>
+            <div class="bar-container" role="group" aria-label="Bar Section">
+                <div class="bar">
+                    <div class="middle-marker"></div>
+                    <div class="marker"></div>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Back Spine Curve Section -->
+        <fieldset class="border p-2 mt-4">
+            <legend class="w-auto text-center">Back Spine Curve</legend>
+            <div class="spine-curve-container mt-4 text-center" role="group" aria-label="Spine Curve">
+                <img id="spineCurveImage" src="final/images/back_curve.jpeg" alt="Back Spine Curve" class="spine-curve-image">
+            </div>
+        </fieldset>
+
+        <!-- BPM Display -->
+        <fieldset class="border p-2 mt-4">
+            <legend class="w-auto text-center">BPM Rate</legend>
+            <div class="bpm-display mt-4 text-center" role="group" aria-label="BPM Display">
+                <div id="bpmPulse" class="bpm-pulse" aria-hidden="true"></div>
+                <div id="bpmText" class="mt-2" aria-live="polite">BPM: 0</div>
+            </div>
+        </fieldset>
+
+        <!-- Threshold Settings Section -->
+        <fieldset class="border p-2 mt-4">
+            <legend class="w-auto text-center">Load Cell Weight Difference</legend>
+            <div class="threshold-settings mt-4">
+                <div class="text-center">
+                    <label>Weight Difference: </label>
+                    <span id="thresholdValue" class="font-weight-bold text-primary">2</span>
+                </div>
+                <button id="changeThresholdBtn" class="btn btn-primary mt-3">Change Weight Difference</button>
+            </div>
+        </fieldset>
+
+        <!-- Flex Sensor Ranges Section -->
+        <fieldset class="border p-2 mt-4">
+            <legend class="w-auto text-center">Flex Sensor Ranges</legend>
+            <div class="flex-sensor-ranges mt-4">
+                <div class="sensor">
+                    <h5 class="sensor-title">Sensor 1</h5>
+                    <div class="sensor-values">
+                        <div><strong>Current Value:</strong> <span id="sensor1Value">0</span></div>
+                        <div><strong>Range:</strong> <span id="sensor1Range">2000 - 2300</span></div>
+                    </div>
+                </div>
+                <div class="sensor">
+                    <h5 class="sensor-title">Sensor 2</h5>
+                    <div class="sensor-values">
+                        <div><strong>Current Value:</strong> <span id="sensor2Value">0</span></div>
+                        <div><strong>Range:</strong> <span id="sensor2Range">4000 - 4200</span></div>
+                    </div>
+                </div>
+                <button id="changeSensorRangesBtn" class="btn btn-primary mt-3">Change Sensor Ranges</button>
+            </div>
+        </fieldset>
+
+        <!-- Warning Popup -->
+        <div id="warningPopup" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Warning</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to change the weight difference?</p>
+                        <input type="number" id="thresholdInput" class="form-control" placeholder="Enter new weight difference">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="saveThreshold()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Sensor Ranges Popup -->
+        <div id="changeSensorRangesPopup" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Sensor Ranges</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Enter new ranges for Sensor 1 and Sensor 2:</p>
+                        <div class="form-group">
+                            <label for="sensor1RangeInput">Sensor 1 Range:</label>
+                            <input type="text" class="form-control" id="sensor1RangeInput" placeholder="e.g., 2000-2300">
+                        </div>
+                        <div class="form-group">
+                            <label for="sensor2RangeInput">Sensor 2 Range:</label>
+                            <input type="text" class="form-control" id="sensor2RangeInput" placeholder="e.g., 4000-4200">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="saveSensorRanges()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary mt-4" onclick="window.location.href='home.html'">Back to Home</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="temp.js"></script>
+</body>
+</html>
