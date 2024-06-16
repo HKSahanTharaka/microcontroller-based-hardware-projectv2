@@ -3,6 +3,28 @@ const leftMatTotal = document.getElementById('leftMatTotal');
 const rightMatTotal = document.getElementById('rightMatTotal');
 const marker = document.querySelector('.marker');
 const spineCurveImage = document.getElementById('spineCurveImage');
+const sensor1ValueElement = document.getElementById('sensor1Value');
+const sensor2ValueElement = document.getElementById('sensor2Value');
+
+// WebSocket connection
+const socket = new WebSocket('ws://192.168.172.188/ws');
+
+// Event listener for WebSocket connection open
+socket.onopen = function(event) {
+  console.log('WebSocket connection established.');
+};
+
+// Event listener for WebSocket messages
+socket.onmessage = function(event) {
+  const data = JSON.parse(event.data);
+  
+  // Update sensor values in UI
+  sensor1ValueElement.textContent = data.sensor1;
+  sensor2ValueElement.textContent = data.sensor2;
+
+  // Check sensor limits and update spine curve border
+  checkSensorLimits();
+};
 
 // Function to calculate total weight based on mat data points
 function calculateTotalWeight(matId) {
@@ -20,8 +42,8 @@ function calculateTotalWeight(matId) {
 
 // Function to check sensor values against their ranges
 function checkSensorLimits() {
-    const sensor1Value = parseInt(document.getElementById('sensor1Value').textContent);
-    const sensor2Value = parseInt(document.getElementById('sensor2Value').textContent);
+    const sensor1Value = parseInt(sensor1ValueElement.textContent);
+    const sensor2Value = parseInt(sensor2ValueElement.textContent);
     const sensor1Range = document.getElementById('sensor1Range').textContent.split('-').map(Number);
     const sensor2Range = document.getElementById('sensor2Range').textContent.split('-').map(Number);
 
@@ -50,10 +72,6 @@ setInterval(() => {
     // Update BPM (simulated data)
     const newBPM = Math.floor(Math.random() * 100);
     document.getElementById('bpmText').textContent = `BPM: ${newBPM}`;
-    
-    // Update Sensor Values (simulated data)
-    document.getElementById('sensor1Value').textContent = Math.floor(Math.random() * 5000);
-    document.getElementById('sensor2Value').textContent = Math.floor(Math.random() * 5000);
 
     // Check sensor limits and update spine curve border
     checkSensorLimits();
